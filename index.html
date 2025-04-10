@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Multi-Level Dropdown</title>
+  <style>
+    body {
+      background: #3a3a3a;
+      font-family: sans-serif;
+      padding: 20px;
+    }
+
+    .container{
+        width: 20%;
+    }
+
+    .dropdown-menu, .dropdown-submenu {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      position: absolute;
+      display: none;
+      min-width: 180px;
+    }
+
+    .dropdown-menu {
+      position: relative;
+      display: block;
+    }
+
+    .dropdown-item {
+      padding: 10px 15px;
+      color: #333;
+      cursor: pointer;
+      white-space: nowrap;
+      position: relative;
+    }
+
+    .dropdown-item:hover {
+      background-color: #f4b942;
+      color: #000;
+    }
+
+    .dropdown-item.has-submenu::after {
+      content: "▶";
+      position: absolute;
+      right: 10px;
+      top: 10px;
+    }
+
+    .dropdown-item:hover > .dropdown-submenu {
+      display: block;
+      top: 0;
+      left: 100%;
+    }
+  </style>
+</head>
+<body>
+
+    <div class="container" >
+<ul class="dropdown-menu" id="dropdown-root"></ul>
+</div>
+
+<script>
+  const menuData = {
+    "Disposition": {
+      "Interested": {
+        "Project 1": null,
+        "Project 2": null,
+        "Project 3": {
+          "Executive 1": null,
+          "Executive 2": null,
+          "Executive 3": null
+        }
+      },
+      "Not interested": null,
+      "Call back": null,
+      "Follow up": null,
+      "Call not response": null
+    }
+  };
+
+  function createDropdown(data) {
+    const ul = document.createElement('ul');
+    ul.classList.add('dropdown-menu');
+
+    for (const label in data) {
+      const li = document.createElement('li');
+      li.classList.add('dropdown-item');
+      li.textContent = label;
+
+      if (data[label] && typeof data[label] === 'object') {
+        li.classList.add('has-submenu');
+        const subMenu = createDropdown(data[label]);
+        subMenu.classList.replace('dropdown-menu', 'dropdown-submenu');
+        li.appendChild(subMenu);
+      }
+
+      ul.appendChild(li);
+    }
+
+    return ul;
+  }
+
+  const root = document.getElementById('dropdown-root');
+  const dropdown = createDropdown(menuData);
+  root.appendChild(dropdown.firstChild); // remove outer shell
+</script>
+
+</body>
+</html>
